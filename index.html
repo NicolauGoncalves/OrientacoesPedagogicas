@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão Pedagógica - Branta</title>
+    <style>
+        :root {
+            --apple-bg: #f5f5f7;
+            --apple-card: #ffffff;
+            --branta-red: #D32F2F;
+            --text-main: #1d1d1f;
+            --text-sub: #86868b;
+        }
+
+        body {
+            background-color: var(--apple-bg);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px; /* Layout compacto e centralizado */
+            text-align: center;
+        }
+
+        .logo-wrapper {
+            width: 90px;
+            height: 90px;
+            background: white;
+            border-radius: 20px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        .logo-wrapper img {
+            width: 85%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-sub);
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--apple-card);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transition: transform 0.2s ease;
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .card:active { transform: scale(0.98); }
+
+        .tag {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--branta-red);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px 0;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--branta-red);
+            color: white;
+        }
+
+        .btn-primary:hover { opacity: 0.9; }
+
+        .btn-copy {
+            background: #f2f2f7;
+            color: var(--text-main);
+        }
+
+        .btn-copy:hover { background: #e8e8ed; }
+
+        footer {
+            margin-top: 30px;
+            font-size: 10px;
+            color: #b0b0b7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        /* Toast Popup */
+        #toast {
+            visibility: hidden;
+            min-width: 200px;
+            background-color: rgba(29, 29, 31, 0.9);
+            color: #fff;
+            text-align: center;
+            border-radius: 30px;
+            padding: 12px 20px;
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 13px;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+
+        #toast.show { visibility: visible; animation: fade 2.5s; }
+
+        @keyframes fade {
+            0% { opacity: 0; transform: translate(-50%, 10px); }
+            15% { opacity: 1; transform: translate(-50%, 0); }
+            85% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, 10px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo-wrapper">
+            <img src="logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/100?text=Branta'">
+        </div>
+        
+        <h1>Painel Pedagógico</h1>
+        <p class="subtitle">Gestão de Orientações Individuais</p>
+
+        <div id="links-container"></div>
+
+        <footer>Created by — TE Nicolau Gonçalves</footer>
+    </div>
+
+    <div id="toast">Link copiado com sucesso</div>
+
+    <script>
+        // Links atualizados com permissão organizacional
+        const data = [
+            { id: "HIGH 1", tag: "High School", url: "https://brantag12-my.sharepoint.com/:f:/g/personal/ne_goncalves_branta_com_br/IgCHpWhCxXbBS6CWU3qjf_MJAYXOpDv2TyUvYLBTXjUqbJs?e=MXBMKe" },
+            { id: "HIGH 2", tag: "High School", url: "https://brantag12-my.sharepoint.com/:f:/g/personal/ne_goncalves_branta_com_br/IgAYnjwXEz6iQJ_9NKElLe-vAXj0vVTKrN7ECWv9IrskB-U?e=Giwlhz" },
+            { id: "HIGH 3", tag: "High School", url: "https://brantag12-my.sharepoint.com/:f:/g/personal/ne_goncalves_branta_com_br/IgDkoNPtnz8YS5Cc1y2BmcvfAW3dZ_-Iadzfb9slY5Z8VxA?e=6pnw9R" },
+            { id: "M1 - Middle School", tag: "Middle School", url: "https://brantag12-my.sharepoint.com/:f:/g/personal/ne_goncalves_branta_com_br/IgAebr6T8D30TK4YlN6jLor7Aa6OYZkfubkWaVexM7K9PBQ?e=b5OMVE" },
+            { id: "M2 - Middle School", tag: "Middle School", url: "https://brantag12-my.sharepoint.com/:f:/g/personal/ne_goncalves_branta_com_br/IgD53x3VhRVfRIFhs9IrQGi3AZ8SBWvoib14-PlTCMunUyA?e=Pv6wws" },
+            { id: "M3 e M4 - Middle School", tag: "Middle School", url: "https://brantag12-my.sharepoint.com/:f:/g/personal/ne_goncalves_branta_com_br/IgDOrs-HfFRzTKf7qJeChE80AVTW7C6eWdGtI397ynIqvMA?e=tqRoIj" }
+        ];
+
+        const container = document.getElementById('links-container');
+
+        data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <span class="tag">${item.tag}</span>
+                <div class="card-title">${item.id}</div>
+                <a href="${item.url}" target="_blank" class="btn btn-primary">Gerenciar Arquivos</a>
+                <button class="btn btn-copy" onclick="copyUrl('${item.url}')">Copiar Link</button>
+            `;
+            container.appendChild(card);
+        });
+
+        function copyUrl(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                const t = document.getElementById('toast');
+                t.className = "show";
+                setTimeout(() => { t.className = ""; }, 2500);
+            });
+        }
+    </script>
+</body>
+</html>
